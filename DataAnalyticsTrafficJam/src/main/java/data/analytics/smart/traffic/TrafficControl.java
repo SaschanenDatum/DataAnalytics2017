@@ -10,7 +10,7 @@ import data.analytics.smart.traffic.model.LightSwitchEvent;
 public class TrafficControl {
 
 	public static void main(String[] args) {
-		CrossRoad road = new CrossRoad("4");
+		CrossRoad road = new CrossRoad("4", 0);
 		EsperService service = new EsperService(road);
 		CarIncomingEvent event = new CarIncomingEvent(CardinalDirection.EAST);
 		for (int i = 0; i <5; i++) {
@@ -24,6 +24,7 @@ public class TrafficControl {
 		Direction southDirection = new Direction(south, west, east, north);
 		Direction eastDirection = new Direction(east, south, north, west);
 		Direction westDirection = new Direction(west, north, south, east);
+		//TODO Create Routes
 	}
 
 }

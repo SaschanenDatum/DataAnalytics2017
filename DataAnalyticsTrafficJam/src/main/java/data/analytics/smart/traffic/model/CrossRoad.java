@@ -10,14 +10,31 @@ public class CrossRoad extends Point{
 	
 	private TrafficLight light = new TrafficLight(CardinalDirection.NORTH, 0);
 	
-	public CrossRoad(String id){
+	private Map<Direction, Point> connectingPoints = new HashMap<>();
+	
+	private double crossingTime;
+	
+	public CrossRoad(String id, double crossingTime){
 		super(id);
+		this.crossingTime = crossingTime;
 		waitinglist.put(CardinalDirection.EAST, 0);
 		waitinglist.put(CardinalDirection.NORTH, 0);
 		waitinglist.put(CardinalDirection.SOUTH, 0);
 		waitinglist.put(CardinalDirection.WEST, 0);
 	}
-	
+	//TODO add to Constructor or factory
+	public Map<Direction, Point> getConnectingPoints() {
+		return connectingPoints;
+	}
+
+
+
+	public void setConnectingPoints(Map<Direction, Point> connectingPoints) {
+		this.connectingPoints = connectingPoints;
+	}
+
+
+
 	public Set<CardinalDirection> getKeyList(){
 		return waitinglist.keySet();
 	}

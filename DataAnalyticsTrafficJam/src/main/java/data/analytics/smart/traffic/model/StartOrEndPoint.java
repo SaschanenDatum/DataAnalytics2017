@@ -2,13 +2,13 @@ package data.analytics.smart.traffic.model;
 
 public class StartOrEndPoint extends Point{
 
-	private CardinalDirection direction;
-	public StartOrEndPoint(String id, CardinalDirection direction) {
+	private Direction direction;
+	public StartOrEndPoint(String id, Direction direction) {
 		super(id);
 		this.direction = direction;
 	}
 	
-	public CardinalDirection geDirection(){
+	public Direction geDirection(){
 		return this.direction;
 	}
 	
