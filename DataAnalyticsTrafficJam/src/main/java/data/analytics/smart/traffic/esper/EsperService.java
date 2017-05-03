@@ -8,7 +8,7 @@ import com.espertech.esper.client.UpdateListener;
 
 import data.analytics.smart.traffic.model.CarIncomingEvent;
 import data.analytics.smart.traffic.model.CrossRoad;
-import data.analytics.smart.traffic.model.Direction;
+import data.analytics.smart.traffic.model.CardinalDirection;
 import data.analytics.smart.traffic.model.LightSwitchEvent;
 
 public class EsperService {
@@ -55,7 +55,7 @@ public class EsperService {
 	private void addContext(){
 		String context = "create context CarByDirection partition by fromDirection from CarIncomingEvent";
 		this.enigne.getEPAdministrator().createEPL(context);
-		for (Direction direction : road.getKeyList()) {
+		for (CardinalDirection direction : road.getKeyList()) {
 			
 			String query = "(fromDirection = "+DIRECTION_PATH+ direction+")";
 			String additionalQuery = "->(CarIncomingEvent("+query+"))";
@@ -65,7 +65,7 @@ public class EsperService {
 			this.addListener(this.createStatement(contextStatement), (newData, oldData)->{
 				for (int i = 0; i < newData.length; i++) {
 					CarIncomingEvent event = (CarIncomingEvent) newData[i].get("car");
-					Direction fromDirection = event.getFromDirection();
+					CardinalDirection fromDirection = event.getFromDirection();
 					sendEvent(new LightSwitchEvent(road.getGreenSide(), fromDirection));
 					int waitingCars = road.getWaitingCars(fromDirection);
 					for (int j = 0; j <= waitingCars; j++) {

@@ -2,20 +2,20 @@ package data.analytics.smart.traffic.model;
 
 public class TrafficLight {
 
-	private Direction greenSide;
+	private CardinalDirection greenSide;
 	
 	private int minGreenTime;
 
-	public TrafficLight(Direction greenSide, int minGreenTime) {
+	public TrafficLight(CardinalDirection greenSide, int minGreenTime) {
 		this.greenSide = greenSide;
 		this.minGreenTime = minGreenTime;
 	}
 
-	public Direction getGreenSide() {
+	public CardinalDirection getGreenSide() {
 		return greenSide;
 	}
 
-	public void setGreenSide(Direction greenSide) {
+	public void setGreenSide(CardinalDirection greenSide) {
 		this.greenSide = greenSide;
 	}
 
@@ -27,7 +27,7 @@ public class TrafficLight {
 		this.minGreenTime = minGreenTime;
 	}
 	
-	public boolean isGreen(Direction side){
+	public boolean isGreen(CardinalDirection side){
 		if(checkNortSout(side) && checkNortSout(greenSide)){
 			return true;
 		}
@@ -37,12 +37,12 @@ public class TrafficLight {
 		return false;
 	}
 
-	private boolean checkEastWest(Direction side) {
-		return side.equals(Direction.EAST)|| side.equals(Direction.WEST);
+	private boolean checkEastWest(CardinalDirection side) {
+		return side.equals(CardinalDirection.EAST)|| side.equals(CardinalDirection.WEST);
 	}
 
-	private boolean checkNortSout(Direction side) {
-		return side.equals(Direction.NORTh) || side.equals(Direction.SOUTH);
+	private boolean checkNortSout(CardinalDirection side) {
+		return side.equals(CardinalDirection.NORTH) || side.equals(CardinalDirection.SOUTH);
 	}
 	
 }

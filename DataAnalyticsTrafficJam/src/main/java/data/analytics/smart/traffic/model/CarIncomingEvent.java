@@ -2,17 +2,17 @@ package data.analytics.smart.traffic.model;
 
 public class CarIncomingEvent {
 
-	private Direction fromDirection;
+	private CardinalDirection fromDirection;
 	
-	public CarIncomingEvent(Direction fromDirection) {
+	public CarIncomingEvent(CardinalDirection fromDirection) {
 		this.fromDirection = fromDirection;
 	}
 
-	public Direction getFromDirection() {
+	public CardinalDirection getFromDirection() {
 		return fromDirection;
 	}
 
-	public void setFromDirection(Direction fromDirection) {
+	public void setFromDirection(CardinalDirection fromDirection) {
 		this.fromDirection = fromDirection;
 	}
 	

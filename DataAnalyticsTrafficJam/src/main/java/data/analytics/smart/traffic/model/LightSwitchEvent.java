@@ -2,28 +2,28 @@ package data.analytics.smart.traffic.model;
 
 public class LightSwitchEvent {
 
-	private Direction from;
+	private CardinalDirection from;
 	
-	private Direction to;
+	private CardinalDirection to;
 	
-	public LightSwitchEvent(Direction from, Direction to) {
+	public LightSwitchEvent(CardinalDirection from, CardinalDirection to) {
 		this.from = from;
 		this.to = to;
 	}
 
-	public Direction getFrom() {
+	public CardinalDirection getFrom() {
 		return from;
 	}
 
-	public void setFrom(Direction from) {
+	public void setFrom(CardinalDirection from) {
 		this.from = from;
 	}
 
-	public Direction getTo() {
+	public CardinalDirection getTo() {
 		return to;
 	}
 
-	public void setTo(Direction to) {
+	public void setTo(CardinalDirection to) {
 		this.to = to;
 	}
 	
