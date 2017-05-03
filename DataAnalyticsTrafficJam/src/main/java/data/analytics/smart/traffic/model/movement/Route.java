@@ -1,7 +1,10 @@
-package data.analytics.smart.traffic.model;
+package data.analytics.smart.traffic.model.movement;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import points.CrossRoad;
+import points.Point;
 
 public class Route {
 
@@ -28,6 +31,18 @@ public class Route {
 
 	public List<CrossRoad> getCrossRoads() {
 		return crossRoads;
+	}
+	
+	public void addCrossRaod(CrossRoad road){
+		this.crossRoads.add(road);
+	}
+	public Point getNextPoint(Point currentPoint){
+	
+		if(currentPoint.equals(endPoint)){
+			return null;
+		}
+		//TODO get Value from Crossroad Stack
+		return null;
 	}
 	
 }

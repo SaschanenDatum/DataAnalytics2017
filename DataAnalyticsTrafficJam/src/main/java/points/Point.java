@@ -1,4 +1,4 @@
-package data.analytics.smart.traffic.model;
+package points;
 
 public abstract class Point {
 

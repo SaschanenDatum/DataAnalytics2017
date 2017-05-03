@@ -1,11 +1,11 @@
 package data.analytics.smart.traffic;
 
 import data.analytics.smart.traffic.esper.EsperService;
-import data.analytics.smart.traffic.model.CarIncomingEvent;
-import data.analytics.smart.traffic.model.CrossRoad;
-import data.analytics.smart.traffic.model.Direction;
-import data.analytics.smart.traffic.model.CardinalDirection;
-import data.analytics.smart.traffic.model.LightSwitchEvent;
+import data.analytics.smart.traffic.model.events.CarIncomingEvent;
+import data.analytics.smart.traffic.model.events.LightSwitchEvent;
+import data.analytics.smart.traffic.model.movement.CardinalDirection;
+import data.analytics.smart.traffic.model.movement.Direction;
+import points.CrossRoad;
 
 public class TrafficControl {
 

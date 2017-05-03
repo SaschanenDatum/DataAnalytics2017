@@ -1,4 +1,6 @@
-package data.analytics.smart.traffic.model;
+package data.analytics.smart.traffic.model.events;
+
+import data.analytics.smart.traffic.model.movement.CardinalDirection;
 
 public class LightSwitchEvent {
 

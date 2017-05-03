@@ -1,5 +1,7 @@
 package data.analytics.smart.traffic.model;
 
+import data.analytics.smart.traffic.model.movement.CardinalDirection;
+
 public class TrafficLight {
 
 	private CardinalDirection greenSide;

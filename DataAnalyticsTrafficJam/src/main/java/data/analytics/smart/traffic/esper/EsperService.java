@@ -6,10 +6,10 @@ import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.UpdateListener;
 
-import data.analytics.smart.traffic.model.CarIncomingEvent;
-import data.analytics.smart.traffic.model.CrossRoad;
-import data.analytics.smart.traffic.model.CardinalDirection;
-import data.analytics.smart.traffic.model.LightSwitchEvent;
+import data.analytics.smart.traffic.model.events.CarIncomingEvent;
+import data.analytics.smart.traffic.model.events.LightSwitchEvent;
+import data.analytics.smart.traffic.model.movement.CardinalDirection;
+import points.CrossRoad;
 
 public class EsperService {
 	private final String DIRECTION_PATH = "data.analytics.smart.traffic.model.Direction.";

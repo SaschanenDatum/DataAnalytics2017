@@ -1,8 +1,12 @@
-package data.analytics.smart.traffic.model;
+package points;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import data.analytics.smart.traffic.model.TrafficLight;
+import data.analytics.smart.traffic.model.movement.CardinalDirection;
+import data.analytics.smart.traffic.model.movement.Direction;
 
 public class CrossRoad extends Point{
 	

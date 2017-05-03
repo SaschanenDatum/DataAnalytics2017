@@ -1,4 +1,4 @@
-package data.analytics.smart.traffic.model;
+package data.analytics.smart.traffic.model.movement;
 
 public class Direction {
 	
