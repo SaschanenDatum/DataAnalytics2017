@@ -6,6 +6,7 @@ public class Direction {
 	private CardinalDirection left;
 	private CardinalDirection right;
 	private CardinalDirection opposite;
+	
 	public Direction(CardinalDirection side, CardinalDirection left, CardinalDirection right,
 			CardinalDirection opposite) {
 		this.direction = side;

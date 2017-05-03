@@ -31,8 +31,6 @@ public class CrossRoad extends Point{
 		return connectingPoints;
 	}
 
-
-
 	public void setConnectingPoints(Map<Direction, Point> connectingPoints) {
 		this.connectingPoints = connectingPoints;
 	}
@@ -60,6 +58,10 @@ public class CrossRoad extends Point{
 	public void switchLight(CardinalDirection to){
 		System.out.println("Switch light from " + light.getGreenSide() + "to" + to );
 		this.light.setGreenSide(to);
+	}
+
+	public void addCrossingPoint(Direction direction ,Point point){
+		this.connectingPoints.put(direction, point);
 	}
 	
 	public void carLeaves(CardinalDirection from){

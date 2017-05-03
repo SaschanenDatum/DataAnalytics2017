@@ -44,6 +44,12 @@ public class Car {
 	public Point getEndPoint() {
 		return endPoint;
 	}
-	
-	
+
+	public void getNextPoint(){
+		Point nextPoint = this.route.getNextPoint(this.currentPoint);
+		if(nextPoint == null){
+			System.out.println("FINISH");
+		}
+		this.currentPoint = nextPoint;
+	}
 }
