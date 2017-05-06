@@ -3,8 +3,8 @@ package data.analytics.smart.traffic.model.movement;
 import java.util.ArrayList;
 import java.util.List;
 
-import points.CrossRoad;
-import points.Point;
+import data.analytics.smart.traffic.model.points.CrossRoad;
+import data.analytics.smart.traffic.model.points.Point;
 
 public class Route {
 
@@ -12,7 +12,6 @@ public class Route {
 	
 	private Point endPoint;
 	
-	//TODO Create Stack or somthing simellar
 	private List<CrossRoad> crossRoads = new ArrayList<>();
 	
 	public Route(Point startPoint, Point endPoint, List<CrossRoad> crossRoads) {
@@ -38,11 +37,12 @@ public class Route {
 	}
 	public Point getNextPoint(Point currentPoint){
 	
-		if(currentPoint.equals(endPoint)){
-			return null;
+		int index = this.crossRoads.indexOf(currentPoint)+1;
+		if(index > crossRoads.size()-1){
+			return endPoint;
+		}else{
+			return crossRoads.get(index);
 		}
-		//TODO get Value from Crossroad Stack
-		return null;
 	}
 	
 }

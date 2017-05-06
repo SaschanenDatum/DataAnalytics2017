@@ -1,7 +1,8 @@
 package data.analytics.smart.traffic.model;
 
 import data.analytics.smart.traffic.model.movement.Route;
-import points.Point;
+import data.analytics.smart.traffic.model.points.CrossRoad;
+import data.analytics.smart.traffic.model.points.Point;
 
 public class Car {
 
@@ -46,10 +47,14 @@ public class Car {
 	}
 
 	public void getNextPoint(){
-		Point nextPoint = this.route.getNextPoint(this.currentPoint);
-		if(nextPoint == null){
-			System.out.println("FINISH");
+		this.currentPoint = this.route.getNextPoint(this.currentPoint);;
+		
+		if(currentPoint instanceof CrossRoad){
+			CrossRoad road = (CrossRoad)this.currentPoint;
+//			road.announceCar(fromDirection, this);
 		}
-		this.currentPoint = nextPoint;
+		if(currentPoint.equals(route.getEndPoint())){
+			System.out.println("Car reached destination");
+		}
 	}
 }

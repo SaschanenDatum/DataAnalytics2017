@@ -1,0 +1,16 @@
+1. Car arrives at empty crossRoad -> Switch to green let the car leave
+2. Car arrives at a Full crossRoad -> Ask for alternative Route, leave to that if possible
+3. Car arrives and fills the max amount -> switch to green, get the cars out
+4. many Cars arrive in short time -> switch to green, get the cars out
+5. Light switchs -> get cars out
+6. Car leaves -> reduze contents in waiting list. Announce car at next crossRaod. 
+7. Car arrives at red side-> wait for green
+
+Consumtion Modes
+	Consume completly: 1, 2, 3, 5, 6
+	Consume so that other can still use it:  4, 7
+
+Windows
+ None needed: 1,2,6 
+ Time to clrear: 3, 4, 5
+ Min GreenTime: 5, 7

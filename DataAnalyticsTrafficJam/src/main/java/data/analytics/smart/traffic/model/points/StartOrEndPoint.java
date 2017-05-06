@@ -1,4 +1,4 @@
-package points;
+package data.analytics.smart.traffic.model.points;
 
 import data.analytics.smart.traffic.model.movement.Direction;
 
