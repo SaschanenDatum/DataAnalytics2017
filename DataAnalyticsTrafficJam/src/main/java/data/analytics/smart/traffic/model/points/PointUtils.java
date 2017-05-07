@@ -8,6 +8,8 @@ import java.util.Set;
 
 /**
  * Created by johannesdato on 07.05.17.
+ *
+ * Util Class for convenience Methods for the Point API
  */
 public class PointUtils {
 
