@@ -1,8 +1,12 @@
 package data.analytics.smart.traffic.model;
 
+import data.analytics.smart.traffic.model.movement.CardinalDirection;
+import data.analytics.smart.traffic.model.movement.Direction;
 import data.analytics.smart.traffic.model.movement.Route;
 import data.analytics.smart.traffic.model.points.CrossRoad;
 import data.analytics.smart.traffic.model.points.Point;
+
+import static data.analytics.smart.traffic.model.points.PointUtils.getIncomingDirection;
 
 public class Car {
 
@@ -47,11 +51,17 @@ public class Car {
 	}
 
 	public void getNextPoint(){
-		this.currentPoint = this.route.getNextPoint(this.currentPoint);;
-		
+
+		Point nextPointOnRoute = this.route.getNextPoint(this.currentPoint);
+		// Autos müssen wissen aus welcher Richtung sie in eine neue CrossRoad fahren
+		CardinalDirection incomingDirection = getIncomingDirection(currentPoint, nextPointOnRoute);
+
+		// Hole den nächsten Punkt von der Route
+		this.currentPoint = nextPointOnRoute;
+
 		if(currentPoint instanceof CrossRoad){
 			CrossRoad road = (CrossRoad)this.currentPoint;
-//			road.announceCar(fromDirection, this);
+			road.announceCar(incomingDirection, this);
 		}
 		if(currentPoint.equals(route.getEndPoint())){
 			System.out.println("Car reached destination");

@@ -10,7 +10,7 @@ public class StartOrEndPoint extends Point{
 		this.direction = direction;
 	}
 	
-	public Direction geDirection(){
+	public Direction getDirection(){
 		return this.direction;
 	}
 
