@@ -7,6 +7,7 @@ import data.analytics.smart.traffic.model.Car;
 import data.analytics.smart.traffic.model.movement.CardinalDirection;
 import data.analytics.smart.traffic.model.movement.Direction;
 import data.analytics.smart.traffic.model.movement.Route;
+import data.analytics.smart.traffic.model.movement.RouteFactory;
 import data.analytics.smart.traffic.model.points.CrossRoad;
 import data.analytics.smart.traffic.model.points.StartOrEndPoint;
 
@@ -29,9 +30,7 @@ public class TrafficControl {
 		StartOrEndPoint d = new StartOrEndPoint("d", northDirection);
 		
 		CrossRoad crossRoad = new CrossRoad("1", 10.4);
-		List<CrossRoad> crossRoads = new ArrayList<>();
-		crossRoads.add(crossRoad);
-		Route ab = new Route(a, b, crossRoads);
+		Route ab = RouteFactory.createRoute(a, b, crossRoad);
 		Car car = new Car(a, b, ab);
 		car.getNextPoint();
 	}

@@ -52,16 +52,14 @@ public class Car {
 	public void getNextPoint(){
 
 		Point nextPointOnRoute = this.route.getNextPoint(this.currentPoint);
-		// Autos müssen wissen aus welcher Richtung sie in eine neue CrossRoad fahren
 		CardinalDirection incomingDirection = getIncomingDirection(currentPoint, nextPointOnRoute);
 		
-		// Hole den nächsten Punkt von der Route
 		this.currentPoint = nextPointOnRoute;
 
 		if(currentPoint instanceof CrossRoad){
 			CrossRoad road = (CrossRoad)this.currentPoint;
 			road.announceCar(incomingDirection, this);
-		}else if(currentPoint.equals(route.getEndPoint())){
+		}else if(route.getEndPoint().equals(currentPoint)){
 			System.out.println("Car reached destination " +currentPoint.getId());
 		}
 	}
