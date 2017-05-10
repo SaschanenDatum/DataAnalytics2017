@@ -88,6 +88,12 @@ public class CrossRoad extends Point{
 			List<Car> carList = waitinglist.get(from);
 			boolean isRemoved = carList.remove(car);
 			if(isRemoved){
+				try {
+					Thread.currentThread().sleep((long) (this.crossingTime*1000));
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				waitinglist.put(from, carList);
 				System.out.println("Car leaves from " + from);
 				System.out.println(carList.size()+ " Cars waiting to leave");

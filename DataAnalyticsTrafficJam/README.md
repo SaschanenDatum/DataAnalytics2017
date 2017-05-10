@@ -16,11 +16,11 @@ Stage 1 und 2 müssen auf jedenfall erledigt werden wenn wir am 24. etwas zeigen 
 beindrucken und die ? Stage ist eher für unser Ego/Gewissen
  #####Stage 1 Grundlegend Funkionierendes Beispiel
  	DONE - Autos müssen wissen aus welcher Richtung sie in eine neue CrossRoad fahren um ihr event anmelden zu können
- 	- Fertige Autos müssen sicher und sauber aus den System entfernt werden. 
- 	- Grundlegende Events müssen definiert und im EsperService implementiert werden
- 	- Windows und Consumtionmodes müssen implementiert werden
- 	- Zeitbedingungen (CrossRoad und Light) müssen implementiert werden
- 	- Traffic Control muss das Beispiel vorbereiten. 
+ 	? Fertige Autos müssen sicher und sauber aus den System entfernt werden. 
+ 	Johnnes Grundlegende Events müssen definiert und im EsperService implementiert werden
+ 	Johannes Windows und Consumtionmodes müssen implementiert werden
+ 	Sascha Zeitbedingungen (CrossRoad (Done) und Light) müssen implementiert werden
+ 	Sascha Traffic Control muss das Beispiel vorbereiten. 
  
  #####Stage 2 Fortgeschrittenes Beispel
  	- Jede CrossRoad ist ein eigener Thread

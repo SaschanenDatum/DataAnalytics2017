@@ -1,12 +1,11 @@
 package data.analytics.smart.traffic.model;
 
+import static data.analytics.smart.traffic.model.points.PointUtils.getIncomingDirection;
+
 import data.analytics.smart.traffic.model.movement.CardinalDirection;
-import data.analytics.smart.traffic.model.movement.Direction;
 import data.analytics.smart.traffic.model.movement.Route;
 import data.analytics.smart.traffic.model.points.CrossRoad;
 import data.analytics.smart.traffic.model.points.Point;
-
-import static data.analytics.smart.traffic.model.points.PointUtils.getIncomingDirection;
 
 public class Car {
 
