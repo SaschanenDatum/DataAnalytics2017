@@ -16,7 +16,7 @@ import data.analytics.smart.traffic.model.movement.CardinalDirection;
 import data.analytics.smart.traffic.model.points.CrossRoad;
 
 public class EsperService {
-	private final String DIRECTION_PATH = "data.analytics.smart.traffic.model.Direction.";
+	private final String DIRECTION_PATH = "data.analytics.smart.traffic.model.movement.CardinalDirection.";
 	private EPServiceProvider enigne = EPServiceProviderManager.getDefaultProvider();
 	private CrossRoad road; 
 

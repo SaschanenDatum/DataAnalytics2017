@@ -11,6 +11,7 @@ import data.analytics.smart.traffic.model.Car;
 import data.analytics.smart.traffic.model.TrafficLight;
 import data.analytics.smart.traffic.model.events.CarIncomingEvent;
 import data.analytics.smart.traffic.model.events.CarLeavingEvent;
+import data.analytics.smart.traffic.model.events.LightSwitchEvent;
 import data.analytics.smart.traffic.model.movement.CardinalDirection;
 import data.analytics.smart.traffic.model.movement.Direction;
 
@@ -34,6 +35,7 @@ public class CrossRoad extends Point{
 		waitinglist.put(CardinalDirection.SOUTH, new ArrayList<>());
 		waitinglist.put(CardinalDirection.WEST, new ArrayList<>());
 		service = new EsperService(this);
+		service.sendEvent(new LightSwitchEvent(CardinalDirection.NORTH, CardinalDirection.WEST));
 	}
 	//TODO add to Constructor or factory
 	public Map<Direction, Point> getConnectingPoints() {
