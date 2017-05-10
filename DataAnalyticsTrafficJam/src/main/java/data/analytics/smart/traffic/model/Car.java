@@ -55,7 +55,7 @@ public class Car {
 		Point nextPointOnRoute = this.route.getNextPoint(this.currentPoint);
 		// Autos müssen wissen aus welcher Richtung sie in eine neue CrossRoad fahren
 		CardinalDirection incomingDirection = getIncomingDirection(currentPoint, nextPointOnRoute);
-
+		
 		// Hole den nächsten Punkt von der Route
 		this.currentPoint = nextPointOnRoute;
 
@@ -65,6 +65,16 @@ public class Car {
 		}
 		if(currentPoint.equals(route.getEndPoint())){
 			System.out.println("Car reached destination");
+		}
+	}
+	
+	/**
+	 * Checks for another Route, if there is none it does nothing else the current route will be overwriten.
+	 */
+	public void checkForNewRoute(){
+		Route alternative = this.route.calculateAlternativeRoute(this.currentPoint);
+		if(alternative != null){
+			this.route = alternative;
 		}
 	}
 }

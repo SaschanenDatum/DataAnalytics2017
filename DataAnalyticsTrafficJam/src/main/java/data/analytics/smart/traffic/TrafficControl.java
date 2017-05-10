@@ -11,10 +11,10 @@ public class TrafficControl {
 		CardinalDirection north = CardinalDirection.NORTH;
 		CardinalDirection west = CardinalDirection.WEST;
 		CardinalDirection south = CardinalDirection.SOUTH;
-		Direction northDirection = new Direction(north, east, west, south);
-		Direction southDirection = new Direction(south, west, east, north);
-		Direction eastDirection = new Direction(east, south, north, west);
-		Direction westDirection = new Direction(west, north, south, east);
+//		Direction northDirection = new Direction(north, east, west, south);
+//		Direction southDirection = new Direction(south, west, east, north);
+//		Direction eastDirection = new Direction(east, south, north, west);
+//		Direction westDirection = new Direction(west, north, south, east);
 		//TODO Create Routes
 	}
 
