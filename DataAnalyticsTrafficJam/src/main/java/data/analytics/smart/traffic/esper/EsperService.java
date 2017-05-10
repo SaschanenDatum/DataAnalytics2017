@@ -11,6 +11,7 @@ import com.espertech.esper.client.UpdateListener;
 
 import data.analytics.smart.traffic.model.Car;
 import data.analytics.smart.traffic.model.events.CarIncomingEvent;
+import data.analytics.smart.traffic.model.events.CarLeavingEvent;
 import data.analytics.smart.traffic.model.events.LightSwitchEvent;
 import data.analytics.smart.traffic.model.movement.CardinalDirection;
 import data.analytics.smart.traffic.model.points.CrossRoad;
@@ -25,6 +26,7 @@ public class EsperService {
 		ConfigurationOperations configuration = enigne.getEPAdministrator().getConfiguration();
 		configuration.addEventType(CarIncomingEvent.class);
 		configuration.addEventType(LightSwitchEvent.class);
+		configuration.addEventType(CarLeavingEvent.class);
 		this.addUpdateStatemens();
 		this.addContext();
 	}
@@ -53,6 +55,13 @@ public class EsperService {
 			for (int i = 0; i < newData.length; i++) {
 				LightSwitchEvent event = (LightSwitchEvent) newData[i].getUnderlying();
 				this.road.switchLight(event.getTo());
+			}
+		});
+		String leave = "select * from CarLeavingEvent";
+		this.addListener(this.createStatement(leave), (newData, oldData)->{
+			for (int i = 0; i < newData.length; i++) {
+				CarLeavingEvent event =  (CarLeavingEvent) newData[i].getUnderlying();
+				this.road.carLeaves(event.getLeaveDirection().getDirection(), event.getCar());
 			}
 		});
 	}

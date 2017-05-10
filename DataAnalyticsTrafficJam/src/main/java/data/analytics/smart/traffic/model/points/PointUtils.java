@@ -3,6 +3,7 @@ package data.analytics.smart.traffic.model.points;
 import data.analytics.smart.traffic.model.movement.CardinalDirection;
 import data.analytics.smart.traffic.model.movement.Direction;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,7 +14,7 @@ import java.util.Set;
  */
 public class PointUtils {
 
-    public static CardinalDirection getIncomingDirection(Point outgoing, Point incoming) {
+    public final static CardinalDirection getIncomingDirection(Point outgoing, Point incoming) {
 
         CardinalDirection outgoingCardinalDirection, incomingCardinalDirection;
 
@@ -50,4 +51,5 @@ public class PointUtils {
         // Everything else
         return null;
     }
+    
 }

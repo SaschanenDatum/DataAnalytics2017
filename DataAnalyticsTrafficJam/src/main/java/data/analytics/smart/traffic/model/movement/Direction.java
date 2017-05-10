@@ -45,4 +45,18 @@ public class Direction {
 	public CardinalDirection getOpposite() {
 		return opposite;
 	}
+	@Override
+	public int hashCode() {
+		return direction.hashCode();
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Direction){
+			Direction objDirect = (Direction) obj;
+			return objDirect.getDirection().equals(this.getDirection());
+		}
+		return false;
+	}
+	
+	
 }

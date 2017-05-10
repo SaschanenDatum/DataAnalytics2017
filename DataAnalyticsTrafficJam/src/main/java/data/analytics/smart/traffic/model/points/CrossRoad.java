@@ -61,14 +61,16 @@ public class CrossRoad extends Point{
 	}
 
 	public void incomingCar(CardinalDirection from, Car car){
+	
+
+		List<Car> carList = waitinglist.get(from);
+		carList.add(car);
+		waitinglist.put(from, carList);
+		System.out.println("Car from " + from + "has to wait in line");
 		if(light.isGreen(from)){
-			System.out.println("Car from " +from + "passes Crossroad");
-			car.getNextPoint();
-		}else{
-			List<Car> carList = waitinglist.get(from);
-			carList.add(car);
-			waitinglist.put(from, carList);
-			System.out.println("Car from " + from + "has to wait in line");
+			System.out.println("Its already green");
+			//TODO fix bug where this event aktivates the CarIncoming Listner again
+//			this.service.sendEvent(new CarLeavingEvent(new Direction(from), car));
 		}
 	}
 
@@ -77,7 +79,7 @@ public class CrossRoad extends Point{
 	}
 
 	public void switchLight(CardinalDirection to){
-		System.out.println("Switch light from " + light.getGreenSide() + "to" + to );
+		System.out.println("Switch light from " + light.getGreenSide() + "  to " + to );
 		this.light.setGreenSide(to);
 	}
 
@@ -99,8 +101,10 @@ public class CrossRoad extends Point{
 				waitinglist.put(from, carList);
 				System.out.println("Car leaves from " + from);
 				System.out.println(carList.size()+ " Cars waiting to leave");
+				if (this.connectingPoints.containsValue(car.getRoute().getNextPoint(this))) {
+					car.getNextPoint();
+				}
 			}
-			car.getNextPoint();
 	}
 
 	public List<Car> getWaitingCars(CardinalDirection from){
