@@ -63,14 +63,15 @@ public class CrossRoad extends Point{
 	public synchronized void incomingCar(CardinalDirection from, Car car){
 	
 
-		List<Car> carList = waitinglist.get(from);
-		carList.add(car);
-		waitinglist.put(from, carList);
-		System.out.println("Car from " + from + "has to wait in line");
 		if(light.isGreen(from)){
 			System.out.println("Its already green");
 			//TODO fix bug where this event aktivates the CarIncoming Listner again
-			this.announceLeaving(new Direction(from), car);
+//			this.announceLeaving(new Direction(from), car);
+		}else{
+			List<Car> carList = waitinglist.get(from);
+			carList.add(car);
+			waitinglist.put(from, carList);
+			System.out.println("Car from " + from + "has to wait in line");
 		}
 	}
 

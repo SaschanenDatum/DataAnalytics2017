@@ -49,6 +49,10 @@ public class EsperService {
 			for (int i = 0; i < newData.length; i++) {
 				CarIncomingEvent car =(CarIncomingEvent) newData[i].getUnderlying();
 				road.incomingCar(car.getFromDirection(), car.getIncomingCar());
+				//TODO find a better bugfix this is more like a big hammer
+				if(road.getGreenSide().equals(car.getFromDirection())){
+					car.getIncomingCar().getNextPoint();
+				}
 			}
 		});
 		String updateLight = "select * from LightSwitchEvent";
