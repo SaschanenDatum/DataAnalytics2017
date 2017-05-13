@@ -49,7 +49,7 @@ public class Car {
 		return endPoint;
 	}
 
-	public void getNextPoint(){
+	public synchronized void getNextPoint(){
 
 		Point nextPointOnRoute = this.route.getNextPoint(this.currentPoint);
 		CardinalDirection incomingDirection = getIncomingDirection(currentPoint, nextPointOnRoute);
@@ -67,7 +67,7 @@ public class Car {
 	/**
 	 * Checks for another Route, if there is none it does nothing else the current route will be overwriten.
 	 */
-	public void checkForNewRoute(){
+	public synchronized void checkForNewRoute(){
 		Route alternative = this.route.calculateAlternativeRoute(this.currentPoint);
 		if(alternative != null){
 			this.route = alternative;

@@ -18,11 +18,12 @@ import data.analytics.smart.traffic.model.points.CrossRoad;
 
 public class EsperService {
 	private final String DIRECTION_PATH = "data.analytics.smart.traffic.model.movement.CardinalDirection.";
-	private EPServiceProvider enigne = EPServiceProviderManager.getDefaultProvider();
+	private EPServiceProvider enigne;
 	private CrossRoad road; 
 
 	public EsperService(CrossRoad road){
 		this.road = road;
+		this.enigne = EPServiceProviderManager.getProvider(road.getId());
 		ConfigurationOperations configuration = enigne.getEPAdministrator().getConfiguration();
 		configuration.addEventType(CarIncomingEvent.class);
 		configuration.addEventType(LightSwitchEvent.class);

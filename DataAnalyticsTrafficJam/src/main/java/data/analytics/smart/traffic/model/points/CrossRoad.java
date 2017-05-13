@@ -60,7 +60,7 @@ public class CrossRoad extends Point{
 		return waitinglist.keySet();
 	}
 
-	public void incomingCar(CardinalDirection from, Car car){
+	public synchronized void incomingCar(CardinalDirection from, Car car){
 	
 
 		List<Car> carList = waitinglist.get(from);
@@ -70,7 +70,7 @@ public class CrossRoad extends Point{
 		if(light.isGreen(from)){
 			System.out.println("Its already green");
 			//TODO fix bug where this event aktivates the CarIncoming Listner again
-//			this.service.sendEvent(new CarLeavingEvent(new Direction(from), car));
+			this.announceLeaving(new Direction(from), car);
 		}
 	}
 
@@ -78,7 +78,7 @@ public class CrossRoad extends Point{
 		return this.light.getGreenSide();
 	}
 
-	public void switchLight(CardinalDirection to){
+	public synchronized void switchLight(CardinalDirection to){
 		System.out.println("Switch light from " + light.getGreenSide() + "  to " + to );
 		this.light.setGreenSide(to);
 	}
@@ -87,7 +87,7 @@ public class CrossRoad extends Point{
 		this.connectingPoints.put(direction, point);
 	}
 
-	public void carLeaves(CardinalDirection from, Car car){
+	public synchronized void carLeaves(CardinalDirection from, Car car){
 		
 			List<Car> carList = waitinglist.get(from);
 			boolean isRemoved = carList.remove(car);

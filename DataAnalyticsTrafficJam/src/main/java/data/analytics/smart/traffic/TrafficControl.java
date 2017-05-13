@@ -36,10 +36,10 @@ public class TrafficControl {
 		StartOrEndPoint g = new StartOrEndPoint("G", southDirection);
 		StartOrEndPoint h = new StartOrEndPoint("h", eastDirection);
 		
-		CrossRoad crossRoad1 = new CrossRoad("1", 10.4);
-		CrossRoad crossRoad2 = new CrossRoad("2", 10.4);
-		CrossRoad crossRoad3 = new CrossRoad("3", 10.4);
-		CrossRoad crossRoad4 = new CrossRoad("4", 10.4);
+		CrossRoad crossRoad1 = new CrossRoad("1", 0.4);
+		CrossRoad crossRoad2 = new CrossRoad("2", 0.4);
+//		CrossRoad crossRoad3 = new CrossRoad("3", 0.4);
+//		CrossRoad crossRoad4 = new CrossRoad("4", 0.4);
 		Route ab = RouteFactory.createRoute(a, b, crossRoad1);
 		Car car = new Car(a, b, ab);
 		car.getNextPoint();
