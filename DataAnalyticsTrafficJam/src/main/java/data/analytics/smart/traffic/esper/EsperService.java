@@ -1,25 +1,24 @@
 package data.analytics.smart.traffic.esper;
 
-import java.util.Iterator;
-import java.util.List;
-
-import com.espertech.esper.client.ConfigurationOperations;
-import com.espertech.esper.client.EPServiceProvider;
-import com.espertech.esper.client.EPServiceProviderManager;
-import com.espertech.esper.client.EPStatement;
-import com.espertech.esper.client.UpdateListener;
-
+import com.espertech.esper.client.*;
+import com.espertech.esper.event.bean.BeanEventBean;
 import data.analytics.smart.traffic.model.Car;
 import data.analytics.smart.traffic.model.events.CarIncomingEvent;
 import data.analytics.smart.traffic.model.events.CarLeavingEvent;
+import data.analytics.smart.traffic.model.events.CarWaitingEvent;
 import data.analytics.smart.traffic.model.events.LightSwitchEvent;
 import data.analytics.smart.traffic.model.movement.CardinalDirection;
+import data.analytics.smart.traffic.model.movement.Direction;
 import data.analytics.smart.traffic.model.points.CrossRoad;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 public class EsperService {
 	private final String DIRECTION_PATH = "data.analytics.smart.traffic.model.movement.CardinalDirection.";
 	private EPServiceProvider enigne;
-	private CrossRoad road; 
+	private CrossRoad road;
 
 	public EsperService(CrossRoad road){
 		this.road = road;
@@ -28,6 +27,7 @@ public class EsperService {
 		configuration.addEventType(CarIncomingEvent.class);
 		configuration.addEventType(LightSwitchEvent.class);
 		configuration.addEventType(CarLeavingEvent.class);
+		configuration.addEventType(CarWaitingEvent.class);
 		this.addUpdateStatemens();
 		this.addContext();
 	}
@@ -55,6 +55,35 @@ public class EsperService {
 				}
 			}
 		});
+
+
+		// Event Nø1 - avoiding traffic jam by forcing light to switch
+		//
+		// This is the interesting listener for the automated update of the traffic light
+		// The EPL Statement has to cover the following requirements:
+		// [WEST<->EAST] Init Event for incoming N->S & S->N cars as detection events
+		// [NORTH<->SOUTH] Init Event for incoming W->E & E->W cars as detection events
+		// TODO: We need to use the recent unique consumption mode since we always only care for the latest light switch
+		//
+		// Example: When the light switched to WEST<->EAST, we only care about the incoming cars from the direction
+		// 			where the cars could cause a traffic jam moving into the next crossroad. If that happens the
+		//			traffic light should be forced to switch lights immediately to avoid the block of the other cr.
+		//
+		// There is just one more problem at the moment.
+		// TODO: The Mustererkenner has to be reloaded for each inititaor event. --> LightSwitchEvent
+
+		String fiveCarsWaitingPattern = "select ci[0] from pattern [ every [5] ci=CarWaitingEvent where timer:within(30 sec)]"; // ...].win:time(30)
+		this.addListener(this.createStatement(fiveCarsWaitingPattern), (newData, oldData)->{
+			for (int i = 0; i < newData.length; i++) {
+				HashMap<String, Object> events = (HashMap) newData[i].getUnderlying();
+				BeanEventBean beb = (BeanEventBean) events.get("ci[0]");
+				CarWaitingEvent cwe = (CarWaitingEvent) beb.getUnderlying();
+				System.out.println("## WARNING! 5 Cars waiting at crossroad" + cwe.getCrossRoad().getId() + " in Queue [" + cwe.getWaitingQueue().toString() + "]!\n## Traffic Jam Possible! Triggering LightSwitchEvent!");
+				Direction actual = new Direction(cwe.getWaitingQueue());
+				this.sendEvent(new LightSwitchEvent(actual.getOpposite(), actual.getLeft()));
+			}
+		});
+
 		String updateLight = "select * from LightSwitchEvent";
 		this.addListener(this.createStatement(updateLight), (newData, oldData)->{
 			for (int i = 0; i < newData.length; i++) {
@@ -62,6 +91,7 @@ public class EsperService {
 				this.road.switchLight(event.getTo());
 			}
 		});
+
 		String leave = "select * from CarLeavingEvent";
 		this.addListener(this.createStatement(leave), (newData, oldData)->{
 			for (int i = 0; i < newData.length; i++) {
@@ -70,6 +100,7 @@ public class EsperService {
 			}
 		});
 	}
+
 	private void addContext(){
 		String context = "create context CarByDirection partition by fromDirection from CarIncomingEvent";
 		this.enigne.getEPAdministrator().createEPL(context);

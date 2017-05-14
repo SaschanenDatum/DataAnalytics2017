@@ -11,7 +11,7 @@ import data.analytics.smart.traffic.model.Car;
 import data.analytics.smart.traffic.model.TrafficLight;
 import data.analytics.smart.traffic.model.events.CarIncomingEvent;
 import data.analytics.smart.traffic.model.events.CarLeavingEvent;
-import data.analytics.smart.traffic.model.events.LightSwitchEvent;
+import data.analytics.smart.traffic.model.events.CarWaitingEvent;
 import data.analytics.smart.traffic.model.movement.CardinalDirection;
 import data.analytics.smart.traffic.model.movement.Direction;
 
@@ -19,7 +19,7 @@ public class CrossRoad extends Point{
 
 	private Map<CardinalDirection, List<Car>> waitinglist = new HashMap<>();
 
-	private TrafficLight light = new TrafficLight(CardinalDirection.NORTH, 0);
+	private TrafficLight light = new TrafficLight(CardinalDirection.NORTH, 10);
 
 	private Map<Direction, Point> connectingPoints = new HashMap<>();
 
@@ -35,7 +35,7 @@ public class CrossRoad extends Point{
 		waitinglist.put(CardinalDirection.SOUTH, new ArrayList<>());
 		waitinglist.put(CardinalDirection.WEST, new ArrayList<>());
 		service = new EsperService(this);
-		service.sendEvent(new LightSwitchEvent(CardinalDirection.NORTH, CardinalDirection.WEST));
+		//service.sendEvent(new LightSwitchEvent(CardinalDirection.NORTH, CardinalDirection.WEST));
 	}
 	//TODO add to Constructor or factory
 	public Map<Direction, Point> getConnectingPoints() {
@@ -61,17 +61,17 @@ public class CrossRoad extends Point{
 	}
 
 	public synchronized void incomingCar(CardinalDirection from, Car car){
-	
 
 		if(light.isGreen(from)){
-			System.out.println("Its already green");
+			System.out.println("CR" + this.id + ": Its already green");
 			//TODO fix bug where this event aktivates the CarIncoming Listner again
 //			this.announceLeaving(new Direction(from), car);
 		}else{
 			List<Car> carList = waitinglist.get(from);
 			carList.add(car);
 			waitinglist.put(from, carList);
-			System.out.println("Car from " + from + "has to wait in line");
+			System.out.println("CR" + this.id + ": Car " + car.getNumber() + " has to wait in line");
+			service.sendEvent(new CarWaitingEvent(car, this, from));
 		}
 	}
 
@@ -80,7 +80,7 @@ public class CrossRoad extends Point{
 	}
 
 	public synchronized void switchLight(CardinalDirection to){
-		System.out.println("Switch light from " + light.getGreenSide() + "  to " + to );
+		System.out.println("CR" + this.id + ": switch light from " + light.getGreenSide() + " to " + to );
 		this.light.setGreenSide(to);
 	}
 
@@ -100,8 +100,8 @@ public class CrossRoad extends Point{
 					e.printStackTrace();
 				}
 				waitinglist.put(from, carList);
-				System.out.println("Car leaves from " + from);
-				System.out.println(carList.size()+ " Cars waiting to leave");
+				System.out.println("CR" + this.id + ": Car " + car.getNumber() + " leaves from " + from);
+				System.out.println("CR" + this.id + ": " + carList.size()+ " Cars waiting to leave");
 				if (this.connectingPoints.containsValue(car.getRoute().getNextPoint(this))) {
 					car.getNextPoint();
 				}

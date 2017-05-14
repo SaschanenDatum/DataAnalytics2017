@@ -9,6 +9,8 @@ import data.analytics.smart.traffic.model.points.Point;
 
 public class Car {
 
+	private int number;
+
 	private Point startPoint;
 	
 	private Point endPoint;
@@ -17,12 +19,17 @@ public class Car {
 	
 	private Route route;
 
-	public Car(Point startPoint, Point endPoint, Route route) {
+	public Car(Point startPoint, Point endPoint, Route route, int number) {
 		super();
 		this.startPoint = startPoint;
 		this.endPoint = endPoint;
 		this.currentPoint = startPoint;
 		this.route = route;
+		this.number = number;
+	}
+
+	public int getNumber() {
+		return number;
 	}
 
 	public Point getCurrentPoint() {
@@ -60,7 +67,7 @@ public class Car {
 			CrossRoad road = (CrossRoad)this.currentPoint;
 			road.announceCar(incomingDirection, this);
 		}else if(route.getEndPoint().equals(currentPoint)){
-			System.out.println("Car reached destination " +currentPoint.getId());
+			System.out.println("Car " + this.number + " reached destination " +currentPoint.getId());
 		}
 	}
 	

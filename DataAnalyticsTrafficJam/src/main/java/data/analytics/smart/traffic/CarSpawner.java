@@ -9,6 +9,7 @@ public class CarSpawner implements Runnable{
 
 	private Route route;
 	private int waitingTime;
+	private int counter = 0;
 
 	public CarSpawner(Route route, int waitingTime) {
 		this.route = route;
@@ -21,7 +22,7 @@ public class CarSpawner implements Runnable{
 		try {
 			while(!Thread.interrupted()){
 				Thread.sleep(waitingTime*1000);
-				Car car = new Car(route.getStartPoint(), route.getEndPoint(), route);
+				Car car = new Car(route.getStartPoint(), route.getEndPoint(), route, counter++);
 				System.out.println("Car arrives from " + route.getStartPoint());
 				car.getNextPoint();
 				
