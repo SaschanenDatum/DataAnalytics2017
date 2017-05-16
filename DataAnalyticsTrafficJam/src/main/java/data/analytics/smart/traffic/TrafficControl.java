@@ -42,13 +42,6 @@ public class TrafficControl {
 //		CrossRoad crossRoad3 = new CrossRoad("3", 0.4);
 //		CrossRoad crossRoad4 = new CrossRoad("4", 0.4);
 
-		TrafficLigthTimer timer1 = new TrafficLigthTimer(10, crossRoad1);
-		Thread thread = new Thread(timer1);
-		thread.start();
-		TrafficLigthTimer timer2 = new TrafficLigthTimer(10, crossRoad2);
-		Thread thread2 = new Thread(timer2);
-		thread2.start();
-		
 		Route ag = RouteFactory.createRoute(a, g, crossRoad1, crossRoad2);
 		System.out.println("- INIT -");
 		Car car0 = new Car(a, g, ag, 0);

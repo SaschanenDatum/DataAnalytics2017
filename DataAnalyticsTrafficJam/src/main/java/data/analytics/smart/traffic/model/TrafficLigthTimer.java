@@ -22,7 +22,7 @@ public class TrafficLigthTimer implements Runnable{
 				Thread.sleep(lightTimer*1000);
 				this.parentRoad.switchFromTimer(new Direction(parentRoad.getGreenSide()).getLeft());
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				System.err.println("Early Ligth Switch detected");
 			}
 		}
 	}

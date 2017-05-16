@@ -28,6 +28,8 @@ public class CrossRoad extends Point{
 	private double crossingTime;
 
 	private EsperService service;
+	
+	private Thread thread; 
 
 	public CrossRoad(String id, double crossingTime){
 		super(id);
@@ -37,6 +39,9 @@ public class CrossRoad extends Point{
 		waitinglist.put(CardinalDirection.SOUTH, new ArrayList<>());
 		waitinglist.put(CardinalDirection.WEST, new ArrayList<>());
 		service = new EsperService(this);
+		TrafficLigthTimer timer1 = new TrafficLigthTimer(this.light.getMinGreenTime(), this);
+		thread = new Thread(timer1);
+		thread.start();
 		//service.sendEvent(new LightSwitchEvent(CardinalDirection.NORTH, CardinalDirection.WEST));
 	}
 	//TODO add to Constructor or factory
@@ -92,6 +97,12 @@ public class CrossRoad extends Point{
 		for (Car car : leavingCars) {
 			this.announceLeaving(new Direction(to), car);
 		}
+	}
+	
+	public void earlyLightSwitch(CardinalDirection to){
+		this.thread.interrupt();
+		this.thread.start();
+		this.switchLight(to);
 	}
 
 	public synchronized void switchFromTimer(CardinalDirection to){
