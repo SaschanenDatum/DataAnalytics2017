@@ -4,6 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import data.analytics.smart.traffic.model.Car;
+import data.analytics.smart.traffic.model.TrafficLigthTimer;
 import data.analytics.smart.traffic.model.movement.CardinalDirection;
 import data.analytics.smart.traffic.model.movement.Direction;
 import data.analytics.smart.traffic.model.movement.Route;
@@ -41,50 +42,33 @@ public class TrafficControl {
 //		CrossRoad crossRoad3 = new CrossRoad("3", 0.4);
 //		CrossRoad crossRoad4 = new CrossRoad("4", 0.4);
 
+		TrafficLigthTimer timer1 = new TrafficLigthTimer(10, crossRoad1);
+		Thread thread = new Thread(timer1);
+		thread.start();
+		TrafficLigthTimer timer2 = new TrafficLigthTimer(10, crossRoad2);
+		Thread thread2 = new Thread(timer2);
+		thread2.start();
+		
 		Route ag = RouteFactory.createRoute(a, g, crossRoad1, crossRoad2);
 		System.out.println("- INIT -");
 		Car car0 = new Car(a, g, ag, 0);
 		car0.getNextPoint();
-		car0.getNextPoint();
-		car0.getNextPoint();
-		crossRoad1.switchLight(CardinalDirection.NORTH);
-
-		try {
-			Thread.sleep(35000);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
-
 		System.out.println("Sleeping for the time of one lightswitch + 5 sec (35 sec)");
 		System.out.println("- START -");
 
-		Car car1 = new Car(a, b, ag, 1);
-		Car car2 = new Car(a, b, ag, 2);
-		Car car3 = new Car(a, b, ag, 3);
-		Car car4 = new Car(a, b, ag, 4);
-		Car car5 = new Car(a, b, ag, 5);
-		Car car6 = new Car(a, b, ag, 6);
-
-		car1.getNextPoint();
-		car2.getNextPoint();
-		car3.getNextPoint();
-		car4.getNextPoint();
-		car5.getNextPoint();
-		car6.getNextPoint();
-
-		car1.getNextPoint();
-		car2.getNextPoint();
-		car3.getNextPoint();
-		car4.getNextPoint();
-		car5.getNextPoint();
-		car6.getNextPoint();
-
-		car1.getNextPoint();
-		car2.getNextPoint();
-		car3.getNextPoint();
-		car4.getNextPoint();
-		car5.getNextPoint();
-		car6.getNextPoint();
+//		Car car1 = new Car(a, b, ag, 1);
+//		Car car2 = new Car(a, b, ag, 2);
+//		Car car3 = new Car(a, b, ag, 3);
+//		Car car4 = new Car(a, b, ag, 4);
+//		Car car5 = new Car(a, b, ag, 5);
+//		Car car6 = new Car(a, b, ag, 6);
+//
+//		car1.getNextPoint();
+//		car2.getNextPoint();
+//		car3.getNextPoint();
+//		car4.getNextPoint();
+//		car5.getNextPoint();
+//		car6.getNextPoint();
 
 	}
 	

@@ -11,6 +11,8 @@ public final class RouteFactory {
 	public static Route createRoute(Point start, Point end, CrossRoad... args){
 		List<CrossRoad> roads = new ArrayList<>();
 		for (int i = 0; i < args.length; i++) {
+			if(i != 0){
+			}
 			roads.add(args[i]);
 		}
 		return new Route(start, end, roads);

@@ -87,6 +87,7 @@ public class EsperService {
 		String updateLight = "select * from LightSwitchEvent";
 		this.addListener(this.createStatement(updateLight), (newData, oldData)->{
 			for (int i = 0; i < newData.length; i++) {
+				System.out.println("LightSwitch Detected");
 				LightSwitchEvent event = (LightSwitchEvent) newData[i].getUnderlying();
 				this.road.switchLight(event.getTo());
 			}

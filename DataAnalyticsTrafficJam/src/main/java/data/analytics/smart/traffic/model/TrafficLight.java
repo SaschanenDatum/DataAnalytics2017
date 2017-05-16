@@ -1,6 +1,7 @@
 package data.analytics.smart.traffic.model;
 
 import data.analytics.smart.traffic.model.movement.CardinalDirection;
+import data.analytics.smart.traffic.model.movement.Direction;
 
 public class TrafficLight {
 
@@ -28,7 +29,7 @@ public class TrafficLight {
 	public void setMinGreenTime(int minGreenTime) {
 		this.minGreenTime = minGreenTime;
 	}
-	
+
 	public boolean isGreen(CardinalDirection side){
 		if(checkNortSout(side) && checkNortSout(greenSide)){
 			return true;
