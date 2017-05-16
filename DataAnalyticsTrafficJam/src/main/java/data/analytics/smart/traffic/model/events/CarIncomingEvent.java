@@ -1,5 +1,7 @@
 package data.analytics.smart.traffic.model.events;
 
+import com.espertech.esper.client.annotation.Priority;
+
 import data.analytics.smart.traffic.model.Car;
 import data.analytics.smart.traffic.model.movement.CardinalDirection;
 

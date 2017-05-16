@@ -1,6 +1,7 @@
 package data.analytics.smart.traffic.esper;
 
 import com.espertech.esper.client.*;
+import com.espertech.esper.client.annotation.Priority;
 import com.espertech.esper.event.bean.BeanEventBean;
 import data.analytics.smart.traffic.model.Car;
 import data.analytics.smart.traffic.model.events.CarIncomingEvent;
@@ -42,7 +43,8 @@ public class EsperService {
 	public void sendEvent(Object object){
 		this.enigne.getEPRuntime().sendEvent(object);
 	}
-
+	
+	
 	private void addUpdateStatemens(){
 		String updateCar ="select * from CarIncomingEvent";
 		this.addListener(this.createStatement(updateCar), (newData, oldData)->{
@@ -80,7 +82,7 @@ public class EsperService {
 				CarWaitingEvent cwe = (CarWaitingEvent) beb.getUnderlying();
 				System.out.println("## WARNING! 5 Cars waiting at crossroad" + cwe.getCrossRoad().getId() + " in Queue [" + cwe.getWaitingQueue().toString() + "]!\n## Traffic Jam Possible! Triggering LightSwitchEvent!");
 				Direction actual = new Direction(cwe.getWaitingQueue());
-				this.sendEvent(new LightSwitchEvent(actual.getOpposite(), actual.getLeft()));
+				road.earlyLightSwitch(actual.getLeft());
 			}
 		});
 
@@ -97,7 +99,7 @@ public class EsperService {
 		this.addListener(this.createStatement(leave), (newData, oldData)->{
 			for (int i = 0; i < newData.length; i++) {
 				CarLeavingEvent event =  (CarLeavingEvent) newData[i].getUnderlying();
-				this.road.carLeaves(event.getLeaveDirection().getDirection(), event.getCar());
+				this.road.carLeaves(event.getLeaveDirection().getDirection(), event.getCar(), event.getIterator());
 			}
 		});
 	}
@@ -116,14 +118,7 @@ public class EsperService {
 				for (int i = 0; i < newData.length; i++) {
 					CarIncomingEvent event = (CarIncomingEvent) newData[i].get("car");
 					CardinalDirection fromDirection = event.getFromDirection();
-					sendEvent(new LightSwitchEvent(road.getGreenSide(), fromDirection));
-					List<Car> cars =road.getWaitingCars(fromDirection);
-					
-					Iterator<Car> it = cars.iterator();
-					while (it.hasNext()) {
-						Car currentCar = (Car) it.next();
-						road.carLeaves(fromDirection, currentCar);
-					}
+					road.earlyLightSwitch(fromDirection);
 				}
 			});
 		}

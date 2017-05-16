@@ -2,6 +2,7 @@ package data.analytics.smart.traffic.model.points;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,7 +22,7 @@ public class CrossRoad extends Point{
 
 	private Map<CardinalDirection, List<Car>> waitinglist = new HashMap<>();
 
-	private TrafficLight light = new TrafficLight(CardinalDirection.NORTH, 10);
+	private TrafficLight light = new TrafficLight(CardinalDirection.NORTH, 90);
 
 	private Map<Direction, Point> connectingPoints = new HashMap<>();
 
@@ -29,7 +30,9 @@ public class CrossRoad extends Point{
 
 	private EsperService service;
 	
-	private Thread thread; 
+	private Thread thread;
+
+	private TrafficLigthTimer timer1; 
 
 	public CrossRoad(String id, double crossingTime){
 		super(id);
@@ -39,7 +42,7 @@ public class CrossRoad extends Point{
 		waitinglist.put(CardinalDirection.SOUTH, new ArrayList<>());
 		waitinglist.put(CardinalDirection.WEST, new ArrayList<>());
 		service = new EsperService(this);
-		TrafficLigthTimer timer1 = new TrafficLigthTimer(this.light.getMinGreenTime(), this);
+		timer1 = new TrafficLigthTimer(this.light.getMinGreenTime(), this);
 		thread = new Thread(timer1);
 		thread.start();
 		//service.sendEvent(new LightSwitchEvent(CardinalDirection.NORTH, CardinalDirection.WEST));
@@ -59,8 +62,8 @@ public class CrossRoad extends Point{
 		service.sendEvent(event);
 	}
 
-	public void announceLeaving(Direction leaveDirection, Car car){
-		CarLeavingEvent event = new CarLeavingEvent(leaveDirection, car);
+	public void announceLeaving(Direction leaveDirection, Car car, Iterator<Car> iterator){
+		CarLeavingEvent event = new CarLeavingEvent(leaveDirection, car, iterator);
 		service.sendEvent(event);
 	}
 
@@ -81,7 +84,7 @@ public class CrossRoad extends Point{
 			waitinglist.put(from, carList);
 			System.out.println("CR" + this.id + ": Car " + car.getNumber() + " has to wait in line");
 			//FIXME BUg who duplicates the car incoming event
-			//			service.sendEvent(new CarWaitingEvent(car, this, from));
+						service.sendEvent(new CarWaitingEvent(this, from));
 		}
 	}
 
@@ -94,15 +97,17 @@ public class CrossRoad extends Point{
 		System.out.println("CR" + this.id + ": switch light from " + light.getGreenSide() + " to " + to );
 		this.light.setGreenSide(to);
 		List<Car> leavingCars = waitinglist.get(to);
-		for (Car car : leavingCars) {
-			this.announceLeaving(new Direction(to), car);
+		Iterator<Car> iterator = leavingCars.iterator();
+		while (iterator.hasNext()) {
+			this.announceLeaving(new Direction(to), iterator.next(), iterator);
 		}
 	}
 	
 	public void earlyLightSwitch(CardinalDirection to){
 		this.thread.interrupt();
-		this.thread.start();
 		this.switchLight(to);
+		this.thread = new Thread(timer1);
+		thread.start();
 	}
 
 	public synchronized void switchFromTimer(CardinalDirection to){
@@ -113,11 +118,10 @@ public class CrossRoad extends Point{
 		this.connectingPoints.put(direction, point);
 	}
 
-	public synchronized void carLeaves(CardinalDirection from, Car car){
+	public synchronized void carLeaves(CardinalDirection from, Car car, Iterator<Car> iterator){
 
 		List<Car> carList = waitinglist.get(from);
-		boolean isRemoved = carList.remove(car);
-		if(isRemoved){
+		iterator.remove();
 			try {
 				Thread.currentThread().sleep((long) (this.crossingTime*1000));
 			} catch (InterruptedException e) {
@@ -127,7 +131,6 @@ public class CrossRoad extends Point{
 			System.out.println("CR" + this.id + ": Car " + car.getNumber() + " leaves from " + from);
 			System.out.println("CR" + this.id + ": " + carList.size()+ " Cars waiting to leave");
 			car.getNextPoint();
-		}
 	}
 
 	public List<Car> getWaitingCars(CardinalDirection from){

@@ -67,7 +67,7 @@ public class Car {
 			CrossRoad road = (CrossRoad)this.currentPoint;
 			road.announceCar(incomingDirection, this);
 		}else if(route.getEndPoint().equals(currentPoint)){
-			System.out.println("Car " + this.number + " reached destination " +currentPoint.getId());
+			System.out.println("###################Car " + this.number + " reached destination " +currentPoint.getId());
 		}
 	}
 	
