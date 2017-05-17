@@ -48,12 +48,14 @@ public class EsperService {
 	private void addUpdateStatemens(){
 		String updateCar ="select * from CarIncomingEvent";
 		this.addListener(this.createStatement(updateCar), (newData, oldData)->{
-			for (int i = 0; i < newData.length; i++) {
-				CarIncomingEvent car =(CarIncomingEvent) newData[i].getUnderlying();
-				road.incomingCar(car.getFromDirection(), car.getIncomingCar());
-				//TODO find a better bugfix this is more like a big hammer
-				if(road.getGreenSide().equals(car.getFromDirection())){
-					car.getIncomingCar().getNextPoint();
+			if(newData.length <= 1){
+				for (int i = 0; i < newData.length; i++) {
+					CarIncomingEvent car =(CarIncomingEvent) newData[i].getUnderlying();
+					road.incomingCar(car.getFromDirection(), car.getIncomingCar());
+					//TODO find a better bugfix this is more like a big hammer
+					if(road.getGreenSide().equals(car.getFromDirection())){
+						car.getIncomingCar().getNextPoint();
+					}
 				}
 			}
 		});
@@ -82,7 +84,9 @@ public class EsperService {
 				CarWaitingEvent cwe = (CarWaitingEvent) beb.getUnderlying();
 				System.out.println("## WARNING! 5 Cars waiting at crossroad" + cwe.getCrossRoad().getId() + " in Queue [" + cwe.getWaitingQueue().toString() + "]!\n## Traffic Jam Possible! Triggering LightSwitchEvent!");
 				Direction actual = new Direction(cwe.getWaitingQueue());
-				road.earlyLightSwitch(actual.getLeft());
+				if(actual.getOpposite().equals(road.getGreenSide())){
+					road.earlyLightSwitch(actual.getLeft());
+				}
 			}
 		});
 

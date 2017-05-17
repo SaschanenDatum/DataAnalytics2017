@@ -121,16 +121,20 @@ public class CrossRoad extends Point{
 	public synchronized void carLeaves(CardinalDirection from, Car car, Iterator<Car> iterator){
 
 		List<Car> carList = waitinglist.get(from);
+		boolean leaveable = carList.contains(car);
 		iterator.remove();
+		carList = waitinglist.get(from);
 			try {
 				Thread.currentThread().sleep((long) (this.crossingTime*1000));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			waitinglist.put(from, carList);
-			System.out.println("CR" + this.id + ": Car " + car.getNumber() + " leaves from " + from);
-			System.out.println("CR" + this.id + ": " + carList.size()+ " Cars waiting to leave");
-			car.getNextPoint();
+			if(leaveable){
+				waitinglist.put(from, carList);
+				System.out.println("CR" + this.id + ": Car " + car.getNumber() + " leaves from " + from);
+				System.out.println("CR" + this.id + ": " + carList.size()+ " Cars waiting to leave");
+				car.getNextPoint();
+			}
 	}
 
 	public List<Car> getWaitingCars(CardinalDirection from){

@@ -19,6 +19,8 @@ public class Car {
 	
 	private Route route;
 
+	private boolean finish = false;
+
 	public Car(Point startPoint, Point endPoint, Route route, int number) {
 		super();
 		this.startPoint = startPoint;
@@ -58,6 +60,9 @@ public class Car {
 
 	public synchronized void getNextPoint(){
 
+		if(finish){
+			return;
+		}
 		Point nextPointOnRoute = this.route.getNextPoint(this.currentPoint);
 		CardinalDirection incomingDirection = getIncomingDirection(currentPoint, nextPointOnRoute);
 		
@@ -68,6 +73,7 @@ public class Car {
 			road.announceCar(incomingDirection, this);
 		}else if(route.getEndPoint().equals(currentPoint)){
 			System.out.println("###################Car " + this.number + " reached destination " +currentPoint.getId());
+			finish  = true;
 		}
 	}
 	
@@ -79,5 +85,8 @@ public class Car {
 		if(alternative != null){
 			this.route = alternative;
 		}
+	}
+	public String toString(){
+		return "Car" + this.number;
 	}
 }
