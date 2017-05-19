@@ -52,6 +52,7 @@ public class CarEsper {
 				car.setRoute(route.calculateAlternativeRoute(point));
 			};
 		}
+		car.getNextPoint();
 	}
 	
 	private void redirectCars(){

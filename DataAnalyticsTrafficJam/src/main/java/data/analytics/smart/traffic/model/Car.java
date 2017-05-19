@@ -4,6 +4,7 @@ import static data.analytics.smart.traffic.model.points.PointUtils.getIncomingDi
 
 import data.analytics.smart.traffic.esper.CarEsper;
 import data.analytics.smart.traffic.esper.CarEsperFactory;
+import data.analytics.smart.traffic.model.events.CarEntersSystemEvent;
 import data.analytics.smart.traffic.model.events.PublishSolveEvent;
 import data.analytics.smart.traffic.model.events.PublishTrafficJamEvent;
 import data.analytics.smart.traffic.model.movement.CardinalDirection;
@@ -76,6 +77,10 @@ public class Car {
 	
 	public void reportJam(Point from, Point to){
 		this.control.sendEvent(new PublishTrafficJamEvent(from, to, this));
+	}
+	
+	public void enterSystem(){
+		this.control.sendEvent(new CarEntersSystemEvent(getRoute(), this));
 	}
 
 	public synchronized void getNextPoint(){
