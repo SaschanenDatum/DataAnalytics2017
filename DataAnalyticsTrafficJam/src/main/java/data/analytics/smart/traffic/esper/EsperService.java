@@ -75,7 +75,7 @@ public class EsperService {
 		// There is just one more problem at the moment.
 		// TODO: The Mustererkenner has to be reloaded for each inititaor event. --> LightSwitchEvent
 
-		String fiveCarsWaitingPattern = "select ci[0] from pattern [ every [5] ci=CarWaitingEvent where timer:within(90 sec)]"; // ...].win:time(30)
+		String fiveCarsWaitingPattern = "select ci[0] from pattern [ligthSwitch=LightSwitchEvent -> every [5] ci=CarWaitingEvent where timer:within(90 sec)]"; // ...].win:time(30)
 		this.addListener(this.createStatement(fiveCarsWaitingPattern), (newData, oldData)->{
 			for (int i = 0; i < newData.length; i++) {
 				HashMap<String, Object> events = (HashMap) newData[i].getUnderlying();

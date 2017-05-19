@@ -45,6 +45,7 @@ public class CrossRoad extends Point{
 		timer1 = new TrafficLigthTimer(this.light.getMinGreenTime(), this);
 		thread = new Thread(timer1);
 		thread.start();
+		//TODO DELETE ME
 		//service.sendEvent(new LightSwitchEvent(CardinalDirection.NORTH, CardinalDirection.WEST));
 	}
 	//TODO add to Constructor or factory
