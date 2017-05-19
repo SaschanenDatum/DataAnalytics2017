@@ -3,12 +3,12 @@ package data.analytics.smart.traffic;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import data.analytics.smart.traffic.esper.CarEsper;
+import data.analytics.smart.traffic.esper.CarEsperFactory;
 import data.analytics.smart.traffic.model.Car;
-import data.analytics.smart.traffic.model.TrafficLigthTimer;
+import data.analytics.smart.traffic.model.events.PublishTrafficJamEvent;
 import data.analytics.smart.traffic.model.movement.CardinalDirection;
 import data.analytics.smart.traffic.model.movement.Direction;
-import data.analytics.smart.traffic.model.movement.Route;
-import data.analytics.smart.traffic.model.movement.RouteFactory;
 import data.analytics.smart.traffic.model.points.CrossRoad;
 import data.analytics.smart.traffic.model.points.StartOrEndPoint;
 
@@ -46,23 +46,13 @@ public class TrafficControl {
 //		CrossRoad crossRoad3 = new CrossRoad("3", 0.4);
 //		CrossRoad crossRoad4 = new CrossRoad("4", 0.4);
 
-		Route ag = RouteFactory.createRoute(a, g, crossRoad1, crossRoad2);
-		Car car0 = new Car(a, g, ag, 0);
-		car0.getNextPoint();
-
-		Car car1 = new Car(a, b, ag, 1);
-		Car car2 = new Car(a, b, ag, 2);
-		Car car3 = new Car(a, b, ag, 3);
-		Car car4 = new Car(a, b, ag, 4);
-		Car car5 = new Car(a, b, ag, 5);
-//		Car car6 = new Car(a, b, ag, 6);
-//
-		car1.getNextPoint();
-		car2.getNextPoint();
-		car3.getNextPoint();
-		car4.getNextPoint();
-		car5.getNextPoint();
-//		car6.getNextPoint();
+		CarEsper esper = CarEsperFactory.getCarControl();
+		esper.sendEvent(new PublishTrafficJamEvent(crossRoad1, crossRoad2, new Car(a, d, null, 1)));
+		System.out.println("First one");
+		esper.sendEvent(new PublishTrafficJamEvent(crossRoad2, crossRoad1, new Car(a, d, null, 1)));
+		System.err.println("No Match");
+		esper.sendEvent(new PublishTrafficJamEvent(crossRoad1, crossRoad2, new Car(a, d, null, 1)));
+		System.out.println("Match");
 
 	}
 	

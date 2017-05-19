@@ -47,7 +47,7 @@ public class Route {
 	 * @return another route. 
 	 */
 	public Route calculateAlternativeRoute(Point currentPoint){
-		return this.calculateAlternativeRoute(currentPoint);
+		return this.alternatives.get(currentPoint);
 	}
 	
 	public void addCrossRaod(CrossRoad road){
