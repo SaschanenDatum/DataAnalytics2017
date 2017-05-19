@@ -6,6 +6,7 @@ import java.util.Set;
 import data.analytics.smart.traffic.esper.CarEsper;
 import data.analytics.smart.traffic.esper.CarEsperFactory;
 import data.analytics.smart.traffic.model.Car;
+import data.analytics.smart.traffic.model.events.PublishSolveEvent;
 import data.analytics.smart.traffic.model.events.PublishTrafficJamEvent;
 import data.analytics.smart.traffic.model.movement.CardinalDirection;
 import data.analytics.smart.traffic.model.movement.Direction;
@@ -53,7 +54,7 @@ public class TrafficControl {
 		System.err.println("No Match");
 		esper.sendEvent(new PublishTrafficJamEvent(crossRoad1, crossRoad2, new Car(a, d, null, 1)));
 		System.out.println("Match");
-
+		esper.sendEvent(new PublishSolveEvent(new Car(a, d, null, 1), crossRoad1, crossRoad2));
 	}
 	
 }

@@ -2,6 +2,9 @@ package data.analytics.smart.traffic.model;
 
 import static data.analytics.smart.traffic.model.points.PointUtils.getIncomingDirection;
 
+import data.analytics.smart.traffic.esper.CarEsper;
+import data.analytics.smart.traffic.esper.CarEsperFactory;
+import data.analytics.smart.traffic.model.events.PublishSolveEvent;
 import data.analytics.smart.traffic.model.movement.CardinalDirection;
 import data.analytics.smart.traffic.model.movement.Route;
 import data.analytics.smart.traffic.model.points.CrossRoad;
@@ -20,6 +23,10 @@ public class Car {
 	private Route route;
 
 	private boolean finish = false;
+	
+	private boolean jamed;
+	
+	private CarEsper control = CarEsperFactory.getCarControl();
 
 	public Car(Point startPoint, Point endPoint, Route route, int number) {
 		super();
@@ -57,6 +64,14 @@ public class Car {
 	public Point getEndPoint() {
 		return endPoint;
 	}
+	
+	public boolean isFinish(){
+		return this.finish;
+	}
+	
+	public void setJamed(boolean jamed){
+		this.jamed = jamed;
+	}
 
 	public synchronized void getNextPoint(){
 
@@ -65,7 +80,10 @@ public class Car {
 		}
 		Point nextPointOnRoute = this.route.getNextPoint(this.currentPoint);
 		CardinalDirection incomingDirection = getIncomingDirection(currentPoint, nextPointOnRoute);
-		
+		if(this.jamed){
+			this.control.sendEvent(new PublishSolveEvent(this, currentPoint, nextPointOnRoute));
+			this.jamed = false;
+		}
 		this.currentPoint = nextPointOnRoute;
 
 		if(currentPoint instanceof CrossRoad){
@@ -77,16 +95,7 @@ public class Car {
 		}
 	}
 	
-	/**
-	 * Checks for another Route, if there is none it does nothing else the current route will be overwriten.
-	 */
-	public synchronized void checkForNewRoute(){
-		Route alternative = this.route.calculateAlternativeRoute(this.currentPoint);
-		if(alternative != null){
-			this.route = alternative;
-		}
-	}
 	public String toString(){
-		return "Car" + this.number;
+		return "Car " + this.number;
 	}
 }

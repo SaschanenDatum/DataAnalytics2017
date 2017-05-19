@@ -30,7 +30,6 @@ public class EsperService {
 		configuration.addEventType(CarLeavingEvent.class);
 		configuration.addEventType(CarWaitingEvent.class);
 		this.addUpdateStatemens();
-		this.addContext();
 	}
 	public EPStatement createStatement(String statement){
 		return enigne.getEPAdministrator().createEPL(statement);
@@ -106,25 +105,5 @@ public class EsperService {
 				this.road.carLeaves(event.getLeaveDirection().getDirection(), event.getCar(), event.getIterator());
 			}
 		});
-	}
-
-	private void addContext(){
-		String context = "create context CarByDirection partition by fromDirection from CarIncomingEvent";
-		this.enigne.getEPAdministrator().createEPL(context);
-		for (CardinalDirection direction : road.getKeyList()) {
-
-			String query = "(fromDirection = "+DIRECTION_PATH+ direction+")";
-			String additionalQuery = "->(CarIncomingEvent("+query+"))";
-			String contextStatement = "context CarByDirection select * from pattern[every "
-					+ "car = CarIncomingEvent"+query+additionalQuery+additionalQuery+additionalQuery+additionalQuery
-					+"where timer:within(30 seconds)]";
-			this.addListener(this.createStatement(contextStatement), (newData, oldData)->{
-				for (int i = 0; i < newData.length; i++) {
-					CarIncomingEvent event = (CarIncomingEvent) newData[i].get("car");
-					CardinalDirection fromDirection = event.getFromDirection();
-					road.earlyLightSwitch(fromDirection);
-				}
-			});
-		}
 	}
 }

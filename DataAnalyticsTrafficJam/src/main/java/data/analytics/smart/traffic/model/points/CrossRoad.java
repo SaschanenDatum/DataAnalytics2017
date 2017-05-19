@@ -29,7 +29,7 @@ public class CrossRoad extends Point{
 	private double crossingTime;
 
 	private EsperService service;
-	
+
 	private Thread thread;
 
 	private TrafficLigthTimer timer1; 
@@ -72,7 +72,7 @@ public class CrossRoad extends Point{
 	}
 
 	public synchronized void incomingCar(CardinalDirection from, Car car){
-		
+
 		System.out.println(String.format("CR%s: Car %s arrived", this.id, car.getNumber()));
 		if(light.isGreen(from)){
 			System.out.println("CR" + this.id + ": Its already green");
@@ -84,7 +84,7 @@ public class CrossRoad extends Point{
 			waitinglist.put(from, carList);
 			System.out.println("CR" + this.id + ": Car " + car.getNumber() + " has to wait in line");
 			//FIXME BUg who duplicates the car incoming event
-						service.sendEvent(new CarWaitingEvent(this, from));
+			service.sendEvent(new CarWaitingEvent(this, from));
 		}
 	}
 
@@ -102,7 +102,7 @@ public class CrossRoad extends Point{
 			this.announceLeaving(new Direction(to), iterator.next(), iterator);
 		}
 	}
-	
+
 	public void earlyLightSwitch(CardinalDirection to){
 		this.thread.interrupt();
 		this.switchLight(to);
@@ -118,23 +118,27 @@ public class CrossRoad extends Point{
 		this.connectingPoints.put(direction, point);
 	}
 
-	public synchronized void carLeaves(CardinalDirection from, Car car, Iterator<Car> iterator){
+	public void carLeaves(CardinalDirection from, Car car, Iterator<Car> iterator){
 
-		List<Car> carList = waitinglist.get(from);
-		boolean leaveable = carList.contains(car);
-		iterator.remove();
-		carList = waitinglist.get(from);
-			try {
-				Thread.currentThread().sleep((long) (this.crossingTime*1000));
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		if(this.getGreenSide().equals(from)){
+			List<Car> carList = waitinglist.get(from);
+			synchronized(this){	
+				boolean leaveable = carList.contains(car);
+				iterator.remove();
+				carList = waitinglist.get(from);
+				try {
+					Thread.currentThread().sleep((long) (this.crossingTime*1000));
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if(leaveable){
+					waitinglist.put(from, carList);
+					System.out.println("CR" + this.id + ": Car " + car.getNumber() + " leaves from " + from);
+					System.out.println("CR" + this.id + ": " + carList.size()+ " Cars waiting to leave");
+					car.getNextPoint();
+				}
 			}
-			if(leaveable){
-				waitinglist.put(from, carList);
-				System.out.println("CR" + this.id + ": Car " + car.getNumber() + " leaves from " + from);
-				System.out.println("CR" + this.id + ": " + carList.size()+ " Cars waiting to leave");
-				car.getNextPoint();
-			}
+		}
 	}
 
 	public List<Car> getWaitingCars(CardinalDirection from){

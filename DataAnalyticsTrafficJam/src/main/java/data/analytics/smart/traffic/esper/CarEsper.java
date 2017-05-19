@@ -1,6 +1,7 @@
 package data.analytics.smart.traffic.esper;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,6 +13,7 @@ import com.espertech.esper.client.UpdateListener;
 
 import data.analytics.smart.traffic.model.Car;
 import data.analytics.smart.traffic.model.events.CarEntersSystemEvent;
+import data.analytics.smart.traffic.model.events.PublishSolveEvent;
 import data.analytics.smart.traffic.model.events.PublishTrafficJamEvent;
 import data.analytics.smart.traffic.model.movement.Route;
 import data.analytics.smart.traffic.model.points.Point;
@@ -19,12 +21,13 @@ import data.analytics.smart.traffic.model.points.Point;
 public class CarEsper {
 	private EPServiceProvider control = EPServiceProviderManager.getProvider("CarControl");
 	private Map<Point, Point> blockedParts = new HashMap<>();
-	
+	private Set<Car> carsInSystem = new HashSet<>();
 	
 	protected CarEsper(){
 		ConfigurationOperations configuration = control.getEPAdministrator().getConfiguration();
 		configuration.addEventType(CarEntersSystemEvent.class);
 		configuration.addEventType(PublishTrafficJamEvent.class);
+		configuration.addEventType(PublishSolveEvent.class);
 		this.createUpdateListener();
 		this.createTrafficJamPattern();
 	}
@@ -49,6 +52,16 @@ public class CarEsper {
 			};
 		}
 	}
+	
+	private void redirectCars(){
+		for (Point point : this.blockedParts.keySet()) {
+			for (Car car : carsInSystem) {
+				if(this.checkIfBlocked(car.getRoute(), point)){
+					car.setRoute(car.getRoute().calculateAlternativeRoute(point));
+				}
+			}
+		}
+	}
 
 	private boolean checkIfBlocked(Route route, Point point) {
 		if(route.getCrossRoads().contains(point)){
@@ -68,6 +81,16 @@ public class CarEsper {
 			//send Report
 			String message = String.format("Traffic Jam Warning between: %s and %s reported by %s and confirmed from %s", firstNotice.getToPoint().getId(), firstNotice.getFromPoint().getId(), firstNotice.getCar(), secNotice.getCar());
 			System.err.println(message);
+			//add to map
+			this.blockedParts.put(firstNotice.getFromPoint(), firstNotice.getToPoint());
+			this.redirectCars();
+		});
+		//unblock Route
+		String unJamPattern = "Select * from pattern [every jam=PublishTrafficJamEvent -> unJam = PublishSolveEvent(fromPoint = jam.fromPoint and toPoint = jam.toPoint and car.number = jam.car.number)]";
+		this.addListener(this.createStatement(unJamPattern), (newData, oldData)->{
+			PublishSolveEvent event = (PublishSolveEvent) newData[0].get("unJam");
+			System.out.println(event.getFromPoint().getId() + "-> " + event.getToPoint().getId()+ "unblocked");
+			this.blockedParts.remove(event.getFromPoint());
 		});
 	}
 	
