@@ -55,9 +55,9 @@ public class TrafficControl {
 		Car car1 = new Car(c, d, route3, 1);
 		Car car0 = new Car(b, c, route2, 2);
 		Car car3 = new Car(a, b, route1, 3);
-		car3.getNextPoint();
-		car0.getNextPoint();
 		car1.getNextPoint();
+		car0.getNextPoint();
+		car3.getNextPoint();
 		for (int i = 4; i < 14; i++) {
 			Car car2 = new Car(d, a, route4, i);
 			car2.getNextPoint();

@@ -76,7 +76,7 @@ public class CrossRoad extends Point{
 		System.out.println(String.format("CR%s: Car %s arrived", this.id, car.getNumber()));
 		if(light.isGreen(from)){
 			System.out.println("CR" + this.id + ": Its already green");
-			this.carLeaves(from, car, this.waitinglist.get(from).iterator());
+			car.getNextPoint();
 		}else{
 			List<Car> carList = waitinglist.get(from);
 			carList.add(car);

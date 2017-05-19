@@ -90,7 +90,6 @@ public class Car {
 			this.jamed = false;
 		}
 		this.currentPoint = nextPointOnRoute;
-
 		if(currentPoint instanceof CrossRoad){
 			CrossRoad road = (CrossRoad)this.currentPoint;
 			road.announceCar(incomingDirection, this);
