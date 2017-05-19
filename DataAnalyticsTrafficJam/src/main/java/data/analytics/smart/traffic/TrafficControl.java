@@ -54,6 +54,11 @@ public class TrafficControl {
 	
 		Car car1 = new Car(c, d, route3, 1);
 		Car car0 = new Car(b, c, route2, 2);
+//		try {
+//			Thread.sleep(90*1000);
+//		} catch (InterruptedException e1) {
+//			e1.printStackTrace();
+//		}
 		Car car3 = new Car(a, b, route1, 3);
 		car1.getNextPoint();
 		car0.getNextPoint();
