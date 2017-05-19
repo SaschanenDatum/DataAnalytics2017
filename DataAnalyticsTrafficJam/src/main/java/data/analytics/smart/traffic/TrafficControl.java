@@ -10,6 +10,8 @@ import data.analytics.smart.traffic.model.events.PublishSolveEvent;
 import data.analytics.smart.traffic.model.events.PublishTrafficJamEvent;
 import data.analytics.smart.traffic.model.movement.CardinalDirection;
 import data.analytics.smart.traffic.model.movement.Direction;
+import data.analytics.smart.traffic.model.movement.Route;
+import data.analytics.smart.traffic.model.movement.RouteFactory;
 import data.analytics.smart.traffic.model.points.CrossRoad;
 import data.analytics.smart.traffic.model.points.StartOrEndPoint;
 
@@ -38,23 +40,31 @@ public class TrafficControl {
 		StartOrEndPoint g = new StartOrEndPoint("G", southDirection);
 		StartOrEndPoint h = new StartOrEndPoint("h", eastDirection);
 		
-		CrossRoad crossRoad1 = new CrossRoad("1", 0.4);
-		CrossRoad crossRoad2 = new CrossRoad("4", 0.4);
-		crossRoad2.earlyLightSwitch(CardinalDirection.WEST);
-		crossRoad1.addCrossingPoint(northDirection, crossRoad2);
-		crossRoad2.addCrossingPoint(southDirection, crossRoad1);
-		crossRoad2.addCrossingPoint(northDirection, g);
-//		CrossRoad crossRoad3 = new CrossRoad("3", 0.4);
-//		CrossRoad crossRoad4 = new CrossRoad("4", 0.4);
-
-		CarEsper esper = CarEsperFactory.getCarControl();
-		esper.sendEvent(new PublishTrafficJamEvent(crossRoad1, crossRoad2, new Car(a, d, null, 1)));
-		System.out.println("First one");
-		esper.sendEvent(new PublishTrafficJamEvent(crossRoad2, crossRoad1, new Car(a, d, null, 1)));
-		System.err.println("No Match");
-		esper.sendEvent(new PublishTrafficJamEvent(crossRoad1, crossRoad2, new Car(a, d, null, 1)));
-		System.out.println("Match");
-		esper.sendEvent(new PublishSolveEvent(new Car(a, d, null, 1), crossRoad1, crossRoad2));
+		System.out.println("############ Start of Demo 1 ############");
+		CrossRoad crossRoad1 = new CrossRoad("1", 10);
+		Route route1 = RouteFactory.createRoute(a, b, crossRoad1);
+		Route route2 = RouteFactory.createRoute(b, c, crossRoad1);
+		Route route3 = RouteFactory.createRoute(c, d, crossRoad1);
+		Route route4 = RouteFactory.createRoute(d, a, crossRoad1);
+		crossRoad1.addCrossingPoint(westDirection, a);
+		crossRoad1.addCrossingPoint(eastDirection, c);
+		crossRoad1.addCrossingPoint(southDirection, b);
+		crossRoad1.addCrossingPoint(northDirection, d);
+		
+	
+		Car car1 = new Car(c, d, route3, 1);
+		Car car0 = new Car(b, c, route2, 2);
+		Car car3 = new Car(a, b, route1, 3);
+		car3.getNextPoint();
+		car0.getNextPoint();
+		car1.getNextPoint();
+		for (int i = 4; i < 14; i++) {
+			Car car2 = new Car(d, a, route4, i);
+			car2.getNextPoint();
+		}
+		
+		
+		
 	}
 	
 }

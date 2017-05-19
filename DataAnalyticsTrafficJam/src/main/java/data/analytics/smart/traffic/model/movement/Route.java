@@ -47,7 +47,11 @@ public class Route {
 	 * @return another route. 
 	 */
 	public Route calculateAlternativeRoute(Point currentPoint){
-		return this.alternatives.get(currentPoint);
+		Route route = this.alternatives.get(currentPoint);
+		if(route == null){
+			return this;
+		}
+		return route;
 	}
 	
 	public void addCrossRaod(CrossRoad road){
@@ -61,6 +65,13 @@ public class Route {
 		}else{
 			return crossRoads.get(index);
 		}
+	}
+	public Point getBevorePoint(CrossRoad road){
+		int index = this.crossRoads.indexOf(road)-1;
+		if(index >= 0){
+			return crossRoads.get(index);
+		}
+		return road;
 	}
 	
 }

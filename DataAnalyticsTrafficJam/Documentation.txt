@@ -1,0 +1,20 @@
+EsperService (Events for CrossRoad)
+Geändertes Statement: "select ci[0] from pattern [ligthSwitch=LightSwitch
+Event -> every [5] ci=CarWaitingEvent where timer:within(90 sec)]"; Das ist der unbennante Consumtion mode von Esper
+
+"select * from pattern [every lightSwitch=LightSwitchEvent -> carWating=CarWaitingEvent -> ce=CarWaitingEvent -> c=CarWaitingEvent where timer:within(90 seconds)]
+Unique schaut ob es in der Ampel phase 3 wartende autos gibt. In denfall wird die Phase 1 warnung geschickt
+
+"select * from pattern [every lightSwitch=LightSwitchEvent -> carWating=CarWaitingEvent -> ce=CarWaitingEvent -> c=CarWaitingEvent -> lastCar=CarWaitingEvent where timer:within(90 seconds)]
+Phase 2 alert 
+
+CarEsper (Events for Car)
+"Select * from CarEntersSystemEvent" Bringt das Auto im System ein, wenn überprüft ob die Route frei ist.
+
+"select * from pattern [every pOne=PublishTrafficJamEvent ->pTwo=PublishTrafficJamEvent(fromPoint = pOne.fromPoint and toPoint = pOne.toPoint) where timer:within(1 min)].win:time(90 seconds)"
+Unique Consuption. Überprüft ob in nächster Zeit zwei TrafficJams Reported werden (abstand zwischen den Meldungen ist derzeit auf 1 min)
+Wenn gemeldet wird eine ausgabe erstellt, die stelle als blockiert eingetragen und alle Autos im system werden darauf überprüft ob sie umgeleitet werden müssen bzw. ob das möglich ist
+
+"Select * from pattern [every jam=PublishTrafficJamEvent -> unJam = PublishSolveEvent(fromPoint = jam.fromPoint and toPoint = jam.toPoint and car.number = jam.car.number)]
+Überprüft ob ein Jam gelöst wurde. Dabei müssen from to und Car number übereinstimmen (ein Auto das kein Jam gemeldet hat kann nicht melden das jetzt alles wieder geht) #
+Die Strecke wird wieder freigegeben, Autos werden aber nicht wieder zuück auf die ursprüngliche Route geleitet (sonst fahren die im Kreis)

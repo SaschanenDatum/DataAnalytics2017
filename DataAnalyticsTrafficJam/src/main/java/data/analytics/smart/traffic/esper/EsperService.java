@@ -42,8 +42,8 @@ public class EsperService {
 	public void sendEvent(Object object){
 		this.enigne.getEPRuntime().sendEvent(object);
 	}
-	
-	
+
+
 	private void addUpdateStatemens(){
 		String updateCar ="select * from CarIncomingEvent";
 		this.addListener(this.createStatement(updateCar), (newData, oldData)->{
@@ -83,11 +83,22 @@ public class EsperService {
 				CarWaitingEvent cwe = (CarWaitingEvent) beb.getUnderlying();
 				System.out.println("## WARNING! 5 Cars waiting at crossroad" + cwe.getCrossRoad().getId() + " in Queue [" + cwe.getWaitingQueue().toString() + "]!\n## Traffic Jam Possible! Triggering LightSwitchEvent!");
 				Direction actual = new Direction(cwe.getWaitingQueue());
-				if(actual.getOpposite().equals(road.getGreenSide())){
-					road.earlyLightSwitch(actual.getLeft());
-				}
+				road.earlyLightSwitch(actual.getLeft());
 			}
 		});
+
+		String alertPhaseOne = "select * from pattern [every lightSwitch=LightSwitchEvent -> carWating=CarWaitingEvent -> ce=CarWaitingEvent -> c=CarWaitingEvent where timer:within(90 seconds)]";
+		this.addListener(this.createStatement(alertPhaseOne), (newData, oldData)->{
+			CarWaitingEvent event =  (CarWaitingEvent) newData[0].get("c");
+			event.getCar().reportJam(event.getCar().getRoute().getBevorePoint(event.getCrossRoad()) , event.getCrossRoad());
+		});
+
+		String alertPhaseTwo = "select * from pattern [every lightSwitch=LightSwitchEvent -> carWating=CarWaitingEvent -> ce=CarWaitingEvent -> c=CarWaitingEvent -> lastCar=CarWaitingEvent where timer:within(90 seconds)]";
+		this.addListener(this.createStatement(alertPhaseTwo), (newData, oldData)->{
+			CarWaitingEvent event =  (CarWaitingEvent) newData[0].get("lastCar");
+			event.getCar().reportJam(event.getCar().getRoute().getBevorePoint(event.getCrossRoad()) , event.getCrossRoad());
+		});
+
 
 		String updateLight = "select * from LightSwitchEvent";
 		this.addListener(this.createStatement(updateLight), (newData, oldData)->{

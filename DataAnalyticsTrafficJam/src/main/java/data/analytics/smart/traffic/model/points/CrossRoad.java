@@ -42,13 +42,12 @@ public class CrossRoad extends Point{
 		waitinglist.put(CardinalDirection.SOUTH, new ArrayList<>());
 		waitinglist.put(CardinalDirection.WEST, new ArrayList<>());
 		service = new EsperService(this);
+		System.out.println("Activate Light");
+		this.service.sendEvent(new LightSwitchEvent(CardinalDirection.EAST, getGreenSide()));
 		timer1 = new TrafficLigthTimer(this.light.getMinGreenTime(), this);
 		thread = new Thread(timer1);
 		thread.start();
-		//TODO DELETE ME
-		//service.sendEvent(new LightSwitchEvent(CardinalDirection.NORTH, CardinalDirection.WEST));
 	}
-	//TODO add to Constructor or factory
 	public Map<Direction, Point> getConnectingPoints() {
 		return connectingPoints;
 	}
@@ -77,15 +76,13 @@ public class CrossRoad extends Point{
 		System.out.println(String.format("CR%s: Car %s arrived", this.id, car.getNumber()));
 		if(light.isGreen(from)){
 			System.out.println("CR" + this.id + ": Its already green");
-			//TODO fix bug where this event aktivates the CarIncoming Listner again
-			//			this.announceLeaving(new Direction(from), car);
+			this.carLeaves(from, car, this.waitinglist.get(from).iterator());
 		}else{
 			List<Car> carList = waitinglist.get(from);
 			carList.add(car);
 			waitinglist.put(from, carList);
 			System.out.println("CR" + this.id + ": Car " + car.getNumber() + " has to wait in line");
-			//FIXME BUg who duplicates the car incoming event
-			service.sendEvent(new CarWaitingEvent(this, from));
+			service.sendEvent(new CarWaitingEvent(this, from, car));
 		}
 	}
 
@@ -95,6 +92,17 @@ public class CrossRoad extends Point{
 
 
 	public synchronized void switchLight(CardinalDirection to){
+		Direction switchDirection = new Direction(to);
+		if(this.waitinglist.get(to).size() == 0 && this.waitinglist.get(switchDirection.getOpposite()).size() == 0){
+			for (CardinalDirection direction : this.waitinglist.keySet()) {
+				switchDirection = new Direction(direction);
+				if(this.waitinglist.get(direction).size() != 0 || this.waitinglist.get(switchDirection.getOpposite()).size() != 0){
+					System.out.println("CR" + this.id + ": Light switch to empty side change side to: " + direction);
+					to = direction;
+					break;
+				}
+			}
+		}
 		System.out.println("CR" + this.id + ": switch light from " + light.getGreenSide() + " to " + to );
 		this.light.setGreenSide(to);
 		List<Car> leavingCars = waitinglist.get(to);

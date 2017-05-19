@@ -2,6 +2,7 @@ package data.analytics.smart.traffic.esper;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -55,7 +56,14 @@ public class CarEsper {
 	
 	private void redirectCars(){
 		for (Point point : this.blockedParts.keySet()) {
-			for (Car car : carsInSystem) {
+			Iterator<Car> iterator = carsInSystem.iterator();
+			while(iterator.hasNext()){
+				Car car = iterator.next();
+				
+				if(car.isFinish()){
+					iterator.remove();
+					continue;
+				}
 				if(this.checkIfBlocked(car.getRoute(), point)){
 					car.setRoute(car.getRoute().calculateAlternativeRoute(point));
 				}

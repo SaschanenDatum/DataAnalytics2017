@@ -12,10 +12,12 @@ import data.analytics.smart.traffic.model.points.CrossRoad;
 public class CarWaitingEvent {
     private CrossRoad crossRoad;
     private CardinalDirection waitingQueue;
+    private Car car;
 
-    public CarWaitingEvent(CrossRoad crossRoad, CardinalDirection waitingQueue) {
+    public CarWaitingEvent(CrossRoad crossRoad, CardinalDirection waitingQueue, Car car) {
         this.crossRoad = crossRoad;
         this.waitingQueue = waitingQueue;
+		this.car = car;
     }
 
     public CrossRoad getCrossRoad() {
@@ -25,4 +27,8 @@ public class CarWaitingEvent {
     public CardinalDirection getWaitingQueue() {
         return waitingQueue;
     }
+
+	public Car getCar() {
+		return car;
+	}
 }
