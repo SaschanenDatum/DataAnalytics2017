@@ -136,7 +136,9 @@ public class CrossRoad extends Point{
 				iterator.remove();
 				carList = waitinglist.get(from);
 				try {
+					System.out.println("## Waiting for crossroad [" + this.id + "] to be empty ... ##");
 					Thread.currentThread().sleep((long) (this.crossingTime*1000));
+					System.out.println("## Crossroad [" + this.id + "] is empty. ##");
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

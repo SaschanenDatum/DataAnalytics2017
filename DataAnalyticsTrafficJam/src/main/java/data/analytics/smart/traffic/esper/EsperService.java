@@ -75,7 +75,7 @@ public class EsperService {
 		// There is just one more problem at the moment.
 		// TODO: The Mustererkenner has to be reloaded for each inititaor event. --> LightSwitchEvent
 
-		String fiveCarsWaitingPattern = "select ci[0] from pattern [ligthSwitch=LightSwitchEvent -> every [5] ci=CarWaitingEvent where timer:within(90 sec)]"; // ...].win:time(30)
+		String fiveCarsWaitingPattern = "select ci[0] from pattern [every (ligthSwitch=LightSwitchEvent -> [5] ci=CarWaitingEvent)].win:time(90 sec)"; // ...].win:time(30)
 		this.addListener(this.createStatement(fiveCarsWaitingPattern), (newData, oldData)->{
 			for (int i = 0; i < newData.length; i++) {
 				HashMap<String, Object> events = (HashMap) newData[i].getUnderlying();
@@ -87,15 +87,17 @@ public class EsperService {
 			}
 		});
 
-		String alertPhaseOne = "select * from pattern [every lightSwitch=LightSwitchEvent -> carWating=CarWaitingEvent -> ce=CarWaitingEvent -> c=CarWaitingEvent where timer:within(90 seconds)]";
+		String alertPhaseOne = "select * from pattern [every (lightSwitch=LightSwitchEvent -> [3] carWaiting=CarWaitingEvent)].win:time(90 sec)";
 		this.addListener(this.createStatement(alertPhaseOne), (newData, oldData)->{
-			CarWaitingEvent event =  (CarWaitingEvent) newData[0].get("c");
+			System.out.println("## Phase 1: 3 Cars ##");
+			CarWaitingEvent event =  (CarWaitingEvent) newData[0].get("carWaiting");
 			event.getCar().reportJam(event.getCar().getRoute().getBevorePoint(event.getCrossRoad()) , event.getCrossRoad());
 		});
 
-		String alertPhaseTwo = "select * from pattern [every lightSwitch=LightSwitchEvent -> carWating=CarWaitingEvent -> ce=CarWaitingEvent -> c=CarWaitingEvent -> lastCar=CarWaitingEvent where timer:within(90 seconds)]";
+		String alertPhaseTwo = "select * from pattern [every (lightSwitch=LightSwitchEvent -> [4] carWaiting=CarWaitingEvent)].win:time(90 sec)";
 		this.addListener(this.createStatement(alertPhaseTwo), (newData, oldData)->{
-			CarWaitingEvent event =  (CarWaitingEvent) newData[0].get("lastCar");
+			System.out.println("## Phase 2: 4 Cars ##");
+			CarWaitingEvent event =  (CarWaitingEvent) newData[0].get("carWaiting");
 			event.getCar().reportJam(event.getCar().getRoute().getBevorePoint(event.getCrossRoad()) , event.getCrossRoad());
 		});
 
